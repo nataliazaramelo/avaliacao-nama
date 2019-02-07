@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+    <!--
+    1 - Dê Oi e saiba o nome da pessoa
+    -->
+    <category>
+        <pattern>SAY HI</pattern>
+        <template>Olá! Como você chama?</template>
+    </category>
+    <category>
+        <pattern>$OI ^</pattern>
+        <template>Olá! Como você chama?</template>
+    </category>
+    <category>
+        <pattern>$OLÁ ^</pattern>
+        <template>Olá! Como você chama?</template>
+    </category>
+    <category>
+        <pattern>*</pattern>
+        <that>COMO VOCÊ CHAMA</that> 
+        <template>Fala aí <set name="NomeDaPessoa"><star /></set>, como posso te ajudar?</template>
+    </category>
+    <category>
+        <pattern>^ MEU ^ NOME ^</pattern>
+        <template>
+        <random>
+            <li><get name="NomeDaPessoa" />!</li>
+            <li>Seu nome é <get name="NomeDaPessoa" /></li>
+            <li>Tá esquecido hein <get name="NomeDaPessoa" /></li>
+        </random>
+        </template>
+    </category>
+    <category>
+        <pattern>$MEU NOME É *</pattern>
+        <template>Fala aí <set name="NomeDaPessoa"><star /></set>, como posso te ajudar?</template>
+    </category>
+
+    <!--
+    2 - Conte de um número (0 até 20) até outro número (0 até 20).
+        Para simplificar o problema, você pode assumir que o segundo número é sempre maior que o primeiro. 
+    -->
+    <category>
+        <pattern>$CONTE DE <set>number</set> ATÉ <set>number</set></pattern>
+        <template>
+           <think>
+                <set name="valid">
+                    <srai>XLE <star index="2"/> XS 20</srai>  
+                </set>
+            </think>
+            <think>
+                <set name="count">
+                <map><name>predecessor</name><star /></map>
+                </set>
+            </think>  
+            <condition name="valid">
+                <li value="TRUE">
+                    <condition name="count">
+                        <li><value><star index="2"/></value></li>
+                        <li>
+                            <set name="count">
+                                <map><name>successor</name><get name="count"/></map>
+                            </set>
+                            <condition name="count">
+                                <li><value><star index="2"/></value></li>
+                                <li>, </li>
+                            </condition>
+                            <loop/>
+                        </li>
+                    </condition>
+                </li> 
+                <li>Por favor, use números entre 0 e 20 (inclusive)
+                </li>
+            </condition>
+        </template>
+    </category> 
+
+    <!--  
+    3 - Nunca deve responder "I have no answer for that" e sim "Não entendi, pode falar de outra forma?", 
+    por exemplo: you: Se jaca fura o pneu da minha bicileta, o azul cai no chão?
+                      bot: Não entendi, pode falar de outra forma?  
+    -->
+    <category>
+        <pattern>*</pattern>
+        <template>Não entendi, pode falar de outra forma?</template>
+    </category> 
+                      
+</aiml>
